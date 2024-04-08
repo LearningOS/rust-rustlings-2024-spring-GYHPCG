@@ -1,3 +1,4 @@
+
 // hashmaps3.rs
 //
 // A list of scores (one per line) of a soccer match is given. Each line is of
