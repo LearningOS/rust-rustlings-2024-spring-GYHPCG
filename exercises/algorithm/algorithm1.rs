@@ -2,7 +2,6 @@
     single linked list merge
     This problem requires you to merge two ordered singly linked lists into one ordered singly linked list
 */
-// I AM NOT DONE
 
 use std::fmt::{self, Display, Formatter};
 use std::ptr::NonNull;
@@ -66,13 +65,52 @@ impl<T> LinkedList<T> {
             },
         }
     }
-    pub fn merge(list_a: LinkedList<T>, list_b: LinkedList<T>) -> Self {
-        //TODO
-        Self {
-            length: 0,
-            start: None,
-            end: None,
+    
+    pub fn merge(list_a: LinkedList<T>, list_b: LinkedList<T>) -> Self 
+        where
+            T: std::cmp::PartialOrd + Clone,
+    {
+
+        let mut merged_list: LinkedList<T> = LinkedList::new();
+        let mut a_node = list_a.start;
+        let mut b_node = list_b.start;
+
+       // 归并排序
+        while a_node.is_some() && b_node.is_some() {
+            unsafe {
+                let a_val = a_node.unwrap().as_ref().val.clone();
+                let b_val = b_node.unwrap().as_ref().val.clone();
+                if a_val < b_val {
+                    merged_list.add(a_val);
+                    a_node =a_node.unwrap().as_ref().next;
+                } else {
+                    merged_list.add(b_val);
+                    b_node = b_node.unwrap().as_ref().next;
+                }
+            }
         }
+
+        if a_node.is_none() {
+            while b_node.is_some() {
+                unsafe {
+                    merged_list.add(b_node.unwrap().as_ref().val.clone());
+                    b_node = b_node.unwrap().as_ref().next;
+                }
+            }
+        } 
+
+        if b_node.is_none() {
+            while a_node.is_some() {
+                unsafe {
+                    merged_list.add(a_node.unwrap().as_ref().val.clone());
+                    a_node = a_node.unwrap().as_ref().next;
+                }
+            }
+        
+        }
+
+        merged_list
+        
     }
 }
 
